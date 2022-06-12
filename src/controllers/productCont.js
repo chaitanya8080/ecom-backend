@@ -10,20 +10,23 @@ const Product = require("../models/productModel")
 
  // for the basic crud 
 
-// router.get("/", async (req,res)=>{
-//     try {
-//         let page = req.query.page ||1
-//         let pagesize = req.query.pagesize ||4
-//         let category = req.query.cat;
-//         let sort = req.query.sort;
-//         let desc  = req.query.desc;
+router.get("/", async (req,res)=>{
+       try {
+       
+    let page  = req.query.page 
+    let size  = req.query.size ||5
+    let sort = req.query.sort 
 
-//         const skip = (page-1) *pagesize;
+    const limit = parseInt(size)
+    const skip = (page-1)*size;
 
-//     } catch (error) {
-        
-//     }
-// })
+    // const product = await Product.find({},{},{limit:limit,skip:skip});
+    const product = await Product.find().limit(limit).skip(skip).sort({price:sort}).lean().exec();
+    return res.status(200).send([{product, status:"ok"}])
+} catch (error) {
+   return res.status(404).send(error.message)
+}
+})
 
 router.post("/",crud(Product).Post);
 router.get("/:id",crud(Product).GetOne);
