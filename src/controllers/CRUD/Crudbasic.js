@@ -51,6 +51,7 @@ const Delete = (User)=>async (req,res)=>{
 
 
 
+
   module.exports = (model) => {
     return {
       Post: Post(model),
