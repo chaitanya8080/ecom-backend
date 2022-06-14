@@ -1,36 +1,57 @@
-
-
-
-
 const express = require("express");
-const crud = require("./CRUD/Crudbasic")
+const User = require("../models/productModel");
 const router = express.Router();
-// const crudAdvance = require("./crudAdvance")
-const Product = require("../models/productModel")
 
- // for the basic crud 
+//to get all the users
+router.get("/", async (req, res) => {
+  try {
+    const users = await User.find().lean().exec();
+    res.status(200).send({ data: users});
+  } catch (error) {
+    res.status(500).send({error: error.message });
+  }
+});
 
-router.get("/", async (req,res)=>{
-       try {
-       
-    let page  = req.query.page 
-    let size  = req.query.size ||5
-    let sort = req.query.sort 
 
-    const limit = parseInt(size)
-    const skip = (page-1)*size;
+router.post("/", async (req, res) => {
+  try {
+    const user = await User.create(req.body);
+    return res.status(201).send({ data: user });
+  } catch (error) {
+    res.status(500).send({message: "error"});
+  }
+});
 
-    // const product = await Product.find({},{},{limit:limit,skip:skip});
-    const product = await Product.find().limit(limit).skip(skip).sort({price:sort}).lean().exec();
-    return res.status(200).send([{product, status:"ok"}])
-} catch (error) {
-   return res.status(404).send(error.message)
-}
-})
+// to get single user by using  id
+router.get("/:id", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).lean().exec();
+    return res.status(200).send({ data: user});
+  } catch (error) {
+    res.status(500).send({error: error.message });
+  }
+});
 
-router.post("/",crud(Product).Post);
-router.get("/:id",crud(Product).GetOne);
-router.delete("/:id",crud(Product).Delete);
-router.patch("/:id",crud(Product).Patch);
+
+//edit user by id
+router.patch("/:id", async (req, res) => {
+  try {
+    const user = await User.findOneAndUpdate({_id:req.params.id} , req.body, {new: true,}).lean().exec();
+    return res.status(200).send({ data: user});
+  } catch (error) {
+    res.status(500).send({error: error.message });
+  }
+});
+
+
+//delete users by id
+router.delete("/:id/delete", async (req, res) => {
+  try {
+    const user = await Category.findByIdAndDelete(req.params.id).lean().exec();
+    return res.status(200).send({ userdata: user});
+  } catch (error) {
+    res.status(500).send({error: error.message });
+  }
+});
 
 module.exports = router;

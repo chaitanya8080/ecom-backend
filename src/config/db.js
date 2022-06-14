@@ -3,9 +3,9 @@
 
 const mongoose = require("mongoose");
 
-
+require("dotenv").config();
 const connect = ()=>{
-    return mongoose.connect("mongodb+srv://chaitanya:girase123@cluster0.dypcc.mongodb.net/ecomBackend?retryWrites=true&w=majority")
+    return mongoose.connect(process.env.mongoURI);
 }
 
 module.exports = connect;

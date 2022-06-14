@@ -11,6 +11,8 @@ const userController = require("./src/controllers/userCont");
 const brandsController = require("./src/controllers/brandCont");
 const productsController = require("./src/controllers/productCont");
 const categoriesController = require("./src/controllers/categoryCont");
+const reviewsController = require("./src/controllers/reviewController");
+
 
 
 
@@ -18,6 +20,8 @@ app.use("/users",userController);
 app.use("/brands", brandsController);
 app.use("/products", productsController);
 app.use("/category", categoriesController);
+app.use("/reviews", reviewsController);
+
 
 app.listen(6789, async ()=>{
     try {

@@ -7,8 +7,6 @@ const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema(
   {
-
-    order: { type: String, required: false },
     product_id:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"product",
