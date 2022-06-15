@@ -70,11 +70,11 @@ router.get("/:id/address",async(req,res)=>{
   router.patch("/:id/address/create", async (req, res) => {
     try {
       const update_Address = await User.updateOne(
-        { _id: req.params.id },{ $push: { addresses: req.body } }
+        { _id: req.params.id },{ $push: { address: req.body } }
       );
-      if (update_Address.acknowledged === true) {
+      if (update_Address.acknowledged) {
         const user = await User.findById(req.params.id).lean().exec();
-        return res.status(201).send({ data: user.addresses});
+        return res.status(201).send({ data: user.address});
       }
       return res.status(404).send({error: "something went wrong" });
     } catch (error) {
@@ -90,7 +90,7 @@ router.delete("/:id/address/:idx", async (req, res) => {
       const delete_Address = await User.updateOne(
         { _id: req.params.id, "address._id": req.params.idx },{ $set: { "address.$": req.body } }
       );
-      if (delete_Address.acknowledged === true) {
+      if (delete_Address.acknowledged) {
         const user = await User.findById(req.params.id).lean().exec();
         return res.status(201).send({ data: user.address});
       }

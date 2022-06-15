@@ -5,8 +5,18 @@ const router = express.Router();
 //to get all the users
 router.get("/", async (req, res) => {
   try {
-    const users = await User.find().lean().exec();
-    res.status(200).send({ data: users});
+    
+    const page = req.query.page || 1;
+    const pagesize = req.query.pagesize || 10; 
+
+    const skip = (page - 1)*pagesize; 
+
+    const users = await User.find().skip(skip).limit(pagesize).populate("categories_id").lean().exec();
+
+    const totalPages = Math.ceil(
+      (await User.find().countDocuments()) / pagesize);
+   
+    res.status(200).send({ data: users, totalPages: totalPages});
   } catch (error) {
     res.status(500).send({error: error.message });
   }
